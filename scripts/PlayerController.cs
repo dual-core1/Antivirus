@@ -6,27 +6,25 @@ public class PlayerController : MonoBehaviour {
 	public float MoveSpeed = 10f;
 
 	float Health;
-	int score;
-	int stage;
+	public int score;
+	public int stage;
 
 	Animator anim;
 	Rigidbody2D rb;
 
 	float MoveDirX; // 0 = none, 1 = right, -1 = left
 	float MoveDirY; // 0 = none, -1 = down, 1 = up
-	bool attacking;
-	bool healing;
+	public bool attacking;
+	public bool healing;
 
 	bool dead;
 
 	// effective frames of attack and heal anims
-	bool attackEffective;
-	bool healEffective;
+	public bool attackEffective;
+	public bool healEffective;
 
 	void Start () {
 		Health = 3;
-		score = 0;
-		stage = 1;
 		MoveDirX = 0f;
 		MoveDirY = 0f;
 		anim = GetComponent<Animator> ();
@@ -157,5 +155,11 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	public void SetScore(int value) {
+		score = value;
+	}
 
+	public void AddScore(int value) {
+		score += value;
+	}
 }
