@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour {
 	public int stage;
 
 	Animator anim;
-	Rigidbody2D rb;
 
 	float MoveDirX; // 0 = none, 1 = right, -1 = left
 	float MoveDirY; // 0 = none, -1 = down, 1 = up
@@ -30,7 +29,6 @@ public class PlayerController : MonoBehaviour {
 		anim = GetComponent<Animator> ();
 		attacking = false;
 		healing = false;
-		rb = GetComponent<Rigidbody2D> ();
 		attackEffective = false;
 		healEffective = false;
 	}
@@ -139,17 +137,17 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// make sure the player can't move past the boundary
-	void OnCollisionEnter(Collision collision) {
+	void OnCollisionEnter2D(Collision2D collision) {
 		// this is some yandev type shit right here
 
 		if (collision.gameObject.CompareTag ("Boundary")) {
-			rb.AddForce (new Vector2 (2f, 0f));
+			MoveDirX = 1;
 		} else if (collision.gameObject.CompareTag ("UBound")) {
-			rb.AddForce (new Vector2 (0f, 2f));
+			MoveDirY = 1;
 		} else if (collision.gameObject.CompareTag ("LBound")) {
-			rb.AddForce (new Vector2 (0f, -2f));
+			MoveDirY = -1;
 		} else if (collision.gameObject.CompareTag ("RBound")) {
-			rb.AddForce (new Vector2 (-2f, 0f));
+			MoveDirX = -1;
 		} else if (collision.gameObject.CompareTag ("Projectile")) {
 			Health -= 1;
 		}

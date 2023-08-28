@@ -41,7 +41,8 @@ public class FileBehavior : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter(Collision collision) {
+	// originally OnCollisionEnter2D
+	void OnCollisionStay2D(Collision2D collision) {
 		bool facing = false;
 
 		// collide with player?
