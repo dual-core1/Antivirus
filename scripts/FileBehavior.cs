@@ -76,7 +76,7 @@ public class FileBehavior : MonoBehaviour {
 							collision.gameObject.GetComponent<PlayerController> ().SetScore(-1);
 							break;
 							// if killed malware, increase player score
-						case 2:
+						case 3:
 							collision.gameObject.GetComponent<PlayerController> ().AddScore(50);
 							break;
 						}
