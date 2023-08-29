@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	public float MoveSpeed = 10f;
 
-	float Health;
+	public int Health;
 	public int score;
 	public int stage;
 
@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour {
 		healEffective = false;
 	}
 
+	// added `&& !attacking && !healing` to walking animation trigger logic so player can attack and heal while moving
+
 	void Update () {
 
 		if (Health < 1) {
@@ -44,62 +46,65 @@ public class PlayerController : MonoBehaviour {
 		MoveDirX = 0f;
 		MoveDirY = 0f;
 
-		if (Input.GetKey (KeyCode.LeftArrow)) {
-			transform.localScale = new Vector3(-2, 2, 1);
-
-			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk")) {
-				anim.Play ("player_walk");
+		if (!dead) {
+			if (Input.GetKey (KeyCode.LeftArrow)) {
+				transform.localScale = new Vector3(-2, 2, 1);
+	
+				if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk") && !attacking && !healing) {
+					anim.Play ("player_walk");
+				}
+				MoveDirX = -1f;
 			}
-			MoveDirX = -1f;
-		}
-
-		if (Input.GetKey (KeyCode.RightArrow)) {
-			transform.localScale = new Vector3(2, 2, 1);
-
-			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk")) {
-				anim.Play ("player_walk");
+	
+			if (Input.GetKey (KeyCode.RightArrow)) {
+				transform.localScale = new Vector3(2, 2, 1);
+	
+				if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk") && !attacking && !healing) {
+					anim.Play ("player_walk");
+				}
+				MoveDirX = 1f;
 			}
-			MoveDirX = 1f;
-		}
-
-		if (Input.GetKey (KeyCode.UpArrow)) {
-			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk")) {
-				anim.Play ("player_walk");
+	
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk") && !attacking && !healing) {
+					anim.Play ("player_walk");
+				}
+				MoveDirY = 1f;
 			}
-			MoveDirY = 1f;
-		}
-
-		if (Input.GetKey (KeyCode.DownArrow)) {
-			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk")) {
-				anim.Play ("player_walk");
+	
+			if (Input.GetKey (KeyCode.DownArrow)) {
+				if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_walk") && !attacking && !healing) {
+					anim.Play ("player_walk");
+				}
+				MoveDirY = -1f;
 			}
-			MoveDirY = -1f;
-		}
-
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_attack")) {
-				attacking = true;
-				attackEffective = false; // should start out false
-				anim.Play ("player_attack");
+	
+			if (Input.GetKeyDown (KeyCode.Z)) {
+				if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_attack")) {
+					attacking = true;
+					attackEffective = false; // should start out false
+					anim.Play ("player_attack");
+				}
 			}
-		}
-
-		if (Input.GetKeyDown (KeyCode.X)) {
-			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_heal")) {
-				healing = true;
-				healEffective = false; // should start out false
-				anim.Play ("player_heal");
+	
+			if (Input.GetKeyDown (KeyCode.X)) {
+				if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_heal")) {
+					healing = true;
+					healEffective = false; // should start out false
+					anim.Play ("player_heal");
+				}
 			}
-		}
 
-		if (MoveDirX == 0 && MoveDirY == 0 && !attacking && !healing) {
-			anim.Play("player_idle");
+			if (MoveDirX == 0 && MoveDirY == 0 && !attacking && !healing && !dead) {
+				anim.Play("player_idle");
+			}
 		}
 
 		if (dead) {
 			MoveDirX = 0;
 			MoveDirY = 0;
-			anim.Play ("player_dead");
+			if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("player_dead"))
+				anim.Play ("player_dead");
 		}
 
 		transform.Translate(MoveDirX * MoveSpeed * Time.deltaTime, MoveDirY * MoveSpeed * Time.deltaTime, 0f);

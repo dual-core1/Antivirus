@@ -13,9 +13,12 @@ public class FileBehavior : MonoBehaviour {
 
 	void Start () {
 		anim = GetComponent<Animator> ();
-
 		dead = false;
 		fired = false;
+		player = GameObject.FindWithTag ("Player");
+		type = (int)Random.Range (1, 4);
+
+		if (type == 4) type = 3;
 
 		switch (type) {
 		case 1:
@@ -28,14 +31,14 @@ public class FileBehavior : MonoBehaviour {
 			anim.Play ("file_malware");
 			break;
 		}
-
-		player = GameObject.FindWithTag ("Player");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (!dead) {
 			transform.Translate(new Vector3 (MoveSpeed * -1f, 0f, 0f));
+
+
 		} else {
 			Destroy (gameObject);
 		}
@@ -111,6 +114,7 @@ public class FileBehavior : MonoBehaviour {
 					// if infected, heal
 					if (facing && type == 2) {
 						GameObject.Find ("heal sound").GetComponent<AudioSource> ().Play (); // play heal sound
+						collision.gameObject.GetComponent<PlayerController> ().AddScore (50);
 						type = 1;
 						anim.Play ("file_transition");
 					}
@@ -139,6 +143,10 @@ public class FileBehavior : MonoBehaviour {
 			Destroy (gameObject);
 		}
 
+
+	}
+
+	void OnTriggerEnter2D (Collider2D collision) {
 		// collision with the fire threshold?
 		if (collision.gameObject.CompareTag ("Fire")) {
 			// is malware?
@@ -147,13 +155,16 @@ public class FileBehavior : MonoBehaviour {
 				if (!fired) {
 					// get player's position
 					Vector3 dirToPlayer = player.transform.position - transform.position;
-
+					
 					// instantiate projectile
 					GameObject proj = (GameObject)Instantiate(projectile, transform.position, Quaternion.identity);
 					proj.GetComponent<ProjectileBehavior> ().Trajectory = dirToPlayer.normalized;
-
+					
 					// play shoot sound
 					GetComponent<AudioSource> ().Play ();
+
+					// make sure not to fire again -- though this made for hilarious glitches!
+					fired = true;
 				}
 			}
 		}

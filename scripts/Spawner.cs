@@ -27,9 +27,6 @@ public class Spawner : MonoBehaviour {
 
 	void SpawnFile () {
 		float randY = Random.Range (spawnMinY, spawnMaxY);
-		int randType = (int)Random.Range (1, 3);
-
 		GameObject file = (GameObject)Instantiate (prefab, new Vector3 (spawnX, randY, 0), Quaternion.identity);
-		file.GetComponent<FileBehavior> ().type = randType;
 	}
 }
